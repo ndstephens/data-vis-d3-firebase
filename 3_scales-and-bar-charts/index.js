@@ -72,8 +72,18 @@ d3.json('./menu-data.json').then(data => {
 
   //* CREATE AND CALL THE AXES
   const xAxis = d3.axisBottom(xScale)
-  const yAxis = d3.axisLeft(yScale)
+  const yAxis = d3
+    .axisLeft(yScale)
+    .ticks(3)
+    .tickFormat(d => `${d} orders`)
 
   xAxisGroup.call(xAxis)
   yAxisGroup.call(yAxis)
+
+  xAxisGroup
+    .selectAll('text')
+    .attr('text-anchor', 'end')
+    .attr('transform', 'rotate(-40)')
+    .attr('fill', 'orange')
+    .attr('font-size', '1rem')
 })
