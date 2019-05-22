@@ -4,10 +4,13 @@ const svg = d3.select('svg')
 svg.style('border', '1px solid black')
 
 d3.json('./menu-data.json').then(data => {
+  // const extent = d3.extent(data, d => d.orders)
+  const ordersMax = d3.max(data, d => d.orders)
+
   // Create a LINEAR scale function for the y-direction (height)
   const yScale = d3
     .scaleLinear()
-    .domain([0, 1000])
+    .domain([0, ordersMax])
     .range([0, 500])
 
   // Create a BAND scale function for the x-direction (num of bars)
