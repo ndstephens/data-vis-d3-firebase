@@ -9,9 +9,6 @@
   "keywords": [],
   "author": "Nate Stephens <ndstephens@gmail.com>",
   "license": "MIT",
-  "devDependencies": {
-    "parcel-bundler": "^1.12.3"
-  },
   "dependencies": {
     "d3": "^5.9.2"
   }
