@@ -1,0 +1,18 @@
+{
+  "name": "1_svg-and-d3-basics",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html"
+  },
+  "keywords": [],
+  "author": "Nate Stephens <ndstephens@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3"
+  },
+  "dependencies": {
+    "d3": "^5.9.2"
+  }
+}
