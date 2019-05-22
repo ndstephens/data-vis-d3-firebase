@@ -7,7 +7,7 @@ const data = [
   { width: 50, height: 30, fill: 'red' },
 ]
 
-const svg = d3.select('svg')
+const svg = d3.select('#index')
 
 //* Select all <rect> elements hard-coded in the DOM
 //* Join the data to that selection of rect(s)
