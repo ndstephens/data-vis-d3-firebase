@@ -23,36 +23,42 @@ const graph = svg
   .attr('height', graphHeight)
   .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
+//? CREATE THE GRAPH AXES
+const xAxisGroup = graph
+  .append('g')
+  .attr('transform', `translate(0, ${graphHeight})`)
+const yAxisGroup = graph.append('g')
+
 //? FETCH DATA FILE, RETURN PROMISE, PROCESS DATA
 d3.json('./menu-data.json').then(data => {
-  // Get the max value of all 'order' properties in the data array
+  //* Get the max value of all 'order' properties in the data array
   const ordersMax = d3.max(data, d => d.orders)
 
-  //* Create a LINEAR scale function for the y-direction (height)
+  //* Create a LINEAR SCALE function for the y-direction (height)
   const yScale = d3
     .scaleLinear()
     .domain([0, ordersMax]) // use the 'ordersMax' value
     .range([0, graphHeight])
 
-  //* Create a BAND scale function for the x-direction (num of bars)
+  //* Create a BAND SCALE function for the x-direction (num of bars)
   const xScale = d3
     .scaleBand()
     .domain(data.map(item => item.name)) // provides quantity and a prop name
     .range([0, graphWidth])
     .paddingInner(0.2)
-  // .paddingOuter(0.2)
+    .paddingOuter(0.2)
 
-  // join the 'data' to 'rects'
+  //* Join the 'data' to 'rects'
   const rects = graph.selectAll('rect').data(data)
 
-  // add properties to any 'rect' elements already in DOM
+  //* Add properties to any 'rect' elements already in DOM (** OPTIONAL **)
   rects
     .attr('width', xScale.bandwidth)
     .attr('height', d => yScale(d.orders))
     .attr('x', d => xScale(d.name))
     .style('fill', 'orange')
 
-  // append the 'enter' selection to the DOM with 'rect' elements
+  //* Append the 'enter' selection to the DOM with 'rect' elements
   rects
     .enter()
     .append('rect')
@@ -60,4 +66,11 @@ d3.json('./menu-data.json').then(data => {
     .attr('height', d => yScale(d.orders))
     .attr('x', d => xScale(d.name))
     .style('fill', 'orange')
+
+  //* CREATE AND CALL THE AXES
+  const xAxis = d3.axisBottom(xScale)
+  const yAxis = d3.axisLeft(yScale)
+
+  xAxisGroup.call(xAxis)
+  yAxisGroup.call(yAxis)
 })
