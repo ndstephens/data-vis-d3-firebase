@@ -7,8 +7,11 @@ const svg = canvas
   .attr('width', 600)
   .attr('height', 600)
 
-//* Append SHAPES to the SVG container
-svg
+//* Create a GROUP ('g' is the <g> element)
+const group = svg.append('g').attr('transform', 'translate(50, 100)')
+
+//* Append SHAPES to the group element
+group
   .append('rect')
   .attr('x', 20)
   .attr('y', 20)
@@ -16,14 +19,14 @@ svg
   .attr('height', 100)
   .style('fill', 'blue')
 
-svg
+group
   .append('circle')
   .attr('r', 50)
   .attr('cx', 300)
   .attr('cy', 70)
   .style('fill', 'pink')
 
-svg
+group
   .append('line')
   .attr('x1', 370)
   .attr('y1', 20)
