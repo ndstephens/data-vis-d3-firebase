@@ -38,7 +38,7 @@ d3.json('./menu-data.json').then(data => {
   const yScale = d3
     .scaleLinear()
     .domain([0, ordersMax]) // use the 'ordersMax' value
-    .range([0, graphHeight])
+    .range([graphHeight, 0])
 
   //* Create a BAND SCALE function for the x-direction (num of bars)
   const xScale = d3
@@ -51,20 +51,23 @@ d3.json('./menu-data.json').then(data => {
   //* Join the 'data' to 'rects'
   const rects = graph.selectAll('rect').data(data)
 
-  //* Add properties to any 'rect' elements already in DOM (** OPTIONAL **)
-  rects
-    .attr('width', xScale.bandwidth)
-    .attr('height', d => yScale(d.orders))
-    .attr('x', d => xScale(d.name))
-    .style('fill', 'orange')
+  //* Add properties to any 'rect' elements already in DOM
+  //? (** OPTIONAL **)
+  // rects
+  //   .attr('width', xScale.bandwidth)
+  //   .attr('height', d => graphHeight - yScale(d.orders))
+  //   .attr('x', d => xScale(d.name))
+  //   .attr('y', d => yScale(d.orders))
+  //   .style('fill', 'orange')
 
   //* Append the 'enter' selection to the DOM with 'rect' elements
   rects
     .enter()
     .append('rect')
     .attr('width', xScale.bandwidth)
-    .attr('height', d => yScale(d.orders))
+    .attr('height', d => graphHeight - yScale(d.orders))
     .attr('x', d => xScale(d.name))
+    .attr('y', d => yScale(d.orders))
     .style('fill', 'orange')
 
   //* CREATE AND CALL THE AXES
