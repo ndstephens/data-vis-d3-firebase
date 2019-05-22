@@ -9,7 +9,14 @@
   "keywords": [],
   "author": "Nate Stephens <ndstephens@gmail.com>",
   "license": "MIT",
+  "staticFiles": {
+    "staticPath": "public",
+    "watcherGlob": "**"
+  },
   "dependencies": {
     "d3": "^5.9.2"
+  },
+  "devDependencies": {
+    "parcel-plugin-static-files-copy": "^2.1.1"
   }
 }
