@@ -7,7 +7,7 @@ const svg = canvas
   .attr('width', 600)
   .attr('height', 600)
 
-// append shapes to SVG container
+//* Append SHAPES to the SVG container
 svg
   .append('rect')
   .attr('x', 20)
@@ -31,3 +31,12 @@ svg
   .attr('y2', 120)
   .style('stroke', 'grey')
   .style('stroke-width', 3)
+
+//* Append TEXT
+svg
+  .append('text')
+  .attr('x', 20)
+  .attr('y', 200)
+  .text('Hello World')
+  .style('fill', 'grey')
+  .style('font-size', '3rem')
