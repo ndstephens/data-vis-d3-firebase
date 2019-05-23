@@ -30,60 +30,66 @@ const xAxisGroup = graph
 const yAxisGroup = graph.append('g')
 
 //? FETCH DATA FILE, RETURN PROMISE, PROCESS DATA
-d3.json('./menu-data.json').then(data => {
-  //* Get the max value of all 'order' properties in the data array
-  const ordersMax = d3.max(data, d => d.orders)
+// d3.json('./menu-data.json').then(data => {
+db.collection('dishes')
+  .get()
+  .then(({ docs }) => {
+    //* Pull the data out of the complex response object
+    const data = docs.map(doc => doc.data())
 
-  //* Create a LINEAR SCALE function for the y-direction (height)
-  const yScale = d3
-    .scaleLinear()
-    .domain([0, ordersMax]) // use the 'ordersMax' value
-    .range([graphHeight, 0])
+    //* Get the max value of all 'order' properties in the data array
+    const ordersMax = d3.max(data, d => d.orders)
 
-  //* Create a BAND SCALE function for the x-direction (num of bars)
-  const xScale = d3
-    .scaleBand()
-    .domain(data.map(item => item.name)) // provides quantity and a prop name
-    .range([0, graphWidth])
-    .paddingInner(0.2)
-    .paddingOuter(0.2)
+    //* Create a LINEAR SCALE function for the y-direction (height)
+    const yScale = d3
+      .scaleLinear()
+      .domain([0, ordersMax]) // use the 'ordersMax' value
+      .range([graphHeight, 0])
 
-  //* Join the 'data' to 'rects'
-  const rects = graph.selectAll('rect').data(data)
+    //* Create a BAND SCALE function for the x-direction (num of bars)
+    const xScale = d3
+      .scaleBand()
+      .domain(data.map(item => item.name)) // provides quantity and a prop name
+      .range([0, graphWidth])
+      .paddingInner(0.2)
+      .paddingOuter(0.2)
 
-  //* Add properties to any 'rect' elements already in DOM
-  //? (** OPTIONAL **)
-  // rects
-  //   .attr('width', xScale.bandwidth)
-  //   .attr('height', d => graphHeight - yScale(d.orders))
-  //   .attr('x', d => xScale(d.name))
-  //   .attr('y', d => yScale(d.orders))
-  //   .style('fill', 'orange')
+    //* Join the 'data' to 'rects'
+    const rects = graph.selectAll('rect').data(data)
 
-  //* Append the 'enter' selection to the DOM with 'rect' elements
-  rects
-    .enter()
-    .append('rect')
-    .attr('width', xScale.bandwidth)
-    .attr('height', d => graphHeight - yScale(d.orders))
-    .attr('x', d => xScale(d.name))
-    .attr('y', d => yScale(d.orders))
-    .style('fill', 'orange')
+    //* Add properties to any 'rect' elements already in DOM
+    //? (** OPTIONAL **)
+    // rects
+    //   .attr('width', xScale.bandwidth)
+    //   .attr('height', d => graphHeight - yScale(d.orders))
+    //   .attr('x', d => xScale(d.name))
+    //   .attr('y', d => yScale(d.orders))
+    //   .style('fill', 'orange')
 
-  //* CREATE AND CALL THE AXES
-  const xAxis = d3.axisBottom(xScale)
-  const yAxis = d3
-    .axisLeft(yScale)
-    .ticks(3)
-    .tickFormat(d => `${d} orders`)
+    //* Append the 'enter' selection to the DOM with 'rect' elements
+    rects
+      .enter()
+      .append('rect')
+      .attr('width', xScale.bandwidth)
+      .attr('height', d => graphHeight - yScale(d.orders))
+      .attr('x', d => xScale(d.name))
+      .attr('y', d => yScale(d.orders))
+      .style('fill', 'orange')
 
-  xAxisGroup.call(xAxis)
-  yAxisGroup.call(yAxis)
+    //* CREATE AND CALL THE AXES
+    const xAxis = d3.axisBottom(xScale)
+    const yAxis = d3
+      .axisLeft(yScale)
+      .ticks(3)
+      .tickFormat(d => `${d} orders`)
 
-  xAxisGroup
-    .selectAll('text')
-    .attr('text-anchor', 'end')
-    .attr('transform', 'rotate(-40)')
-    .attr('fill', 'orange')
-    .attr('font-size', '1rem')
-})
+    xAxisGroup.call(xAxis)
+    yAxisGroup.call(yAxis)
+
+    xAxisGroup
+      .selectAll('text')
+      .attr('text-anchor', 'end')
+      .attr('transform', 'rotate(-40)')
+      .attr('fill', 'orange')
+      .attr('font-size', '1rem')
+  })
