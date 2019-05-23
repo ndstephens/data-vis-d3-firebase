@@ -59,7 +59,7 @@ const update = data => {
   //? Join the updated 'data' to 'rects'
   const rects = graph.selectAll('rect').data(data)
 
-  //? Remove exit selection
+  //? Remove exit selection (OPTIONAL)
   rects.exit().remove()
 
   //? Update properties to any 'rect' elements already in DOM
@@ -102,6 +102,11 @@ db.collection('dishes')
     //* Pull the data out of the complex response object
     const data = docs.map(doc => doc.data())
 
-    //* Call the 'update' function
     update(data)
+
+    //* Using an interval to update data and the chart
+    // d3.interval(() => {
+    //   data[3].orders += 50
+    //   update(data)
+    // }, 1000)
   })
