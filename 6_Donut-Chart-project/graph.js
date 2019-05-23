@@ -13,6 +13,7 @@ const graph = svg
   .append('g')
   .attr('transform', `translate(${center.x}, ${center.y})`)
 
+//? This 'pie' function analyzes the 'cost' property in our data and for each piece of data returns an array of objects each containing the original data object, the index, the startAngle, and the endAngle
 const pie = d3
   .pie()
   .sort(null)
@@ -24,4 +25,9 @@ const angles = pie([
   { name: 'gaming', cost: 200 },
 ])
 
-console.log(angles)
+const arcPath = d3
+  .arc()
+  .outerRadius(dims.radius)
+  .innerRadius(dims.radius / 2)
+
+console.log(arcPath(angles[0]))
