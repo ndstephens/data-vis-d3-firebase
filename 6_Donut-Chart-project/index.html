@@ -4,10 +4,72 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
     <title>Donut Chart</title>
+    <style>
+      h2,
+      p {
+        margin: 10px 0;
+      }
+      header {
+        margin-bottom: 40px;
+      }
+    </style>
   </head>
 
-  <body>
+  <body class="cyan">
+    <!-- HEADER -->
+    <header class="cyan darken-1 section">
+      <h2 class="center white-text">Budget Tracker</h2>
+      <p class="flow-text grey-text center text-lighten-2">
+        Where'd all my money go?
+      </p>
+    </header>
+
+    <!-- BODY -->
+    <div class="container section">
+      <div class="row">
+        <!-- FORM -->
+        <div class="col s12 m6">
+          <form class="card z-depth-2">
+            <div class="card-content">
+              <!-- Title -->
+              <span class="card-title cyan-text">Add Item:</span>
+              <!-- Item Name -->
+              <div class="input-field">
+                <input type="text" id="name" />
+                <label for="name">Item Name</label>
+              </div>
+              <!-- Item Cost -->
+              <div class="input-field">
+                <input type="text" id="cost" />
+                <label for="cost">Item Cost</label>
+              </div>
+              <!-- BUTTON - Add Item -->
+              <div class="input-field center">
+                <button class="btn-large pink white-text">Add Item</button>
+              </div>
+              <!-- ERRORS -->
+              <div class="input-field center">
+                <p class="red-text" id="error"></p>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- CHART -->
+        <div class="col s12 m5 push-m1">
+          <div class="canvas"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATERIALIZE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- JAVASCRIPT -->
     <script src="./index.js"></script>
   </body>
 </html>
