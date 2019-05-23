@@ -95,18 +95,34 @@ const update = data => {
 
 //
 
-//? FETCH DATA FILE, RETURN PROMISE, PROCESS DATA
-db.collection('dishes')
-  .get()
-  .then(({ docs }) => {
-    //* Pull the data out of the complex response object
-    const data = docs.map(doc => doc.data())
+//? CREATE DATA ARRAY THAT WILL BE MUTATED WHEN THE DATABASE IS MODIFIED
+let data = []
 
-    update(data)
+//? FETCH DATA - REALTIME UPDATES
+db.collection('dishes').onSnapshot(res => {
+  // Process all returned changes to the documents (will be one or more, length depends on number of documents currently changed/updated, NOT total number of documents in the collection)
+  res.docChanges().forEach(change => {
+    // Grab the document info out of the 'change' object
+    const doc = { ...change.doc.data(), id: change.doc.id }
 
-    //* Using an interval to update data and the chart
-    // d3.interval(() => {
-    //   data[3].orders += 50
-    //   update(data)
-    // }, 1000)
+    // Update the local 'data' array based on the change type
+    switch (change.type) {
+      case 'added':
+        data.push(doc)
+        break
+      case 'modified':
+        // eslint-disable-next-line no-case-declarations
+        const index = data.findIndex(item => item.id === doc.id)
+        if (index > -1) data[index] = doc
+        break
+      case 'removed':
+        data = data.filter(item => item.id !== doc.id)
+        break
+      default:
+        break
+    }
   })
+
+  update(data)
+  // console.log(data)
+})
