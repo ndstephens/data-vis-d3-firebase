@@ -48,6 +48,9 @@ const yAxis = d3
   .ticks(3)
   .tickFormat(d => `${d} orders`)
 
+//? CREATE A REUSABLE TRANSITION
+const t = d3.transition().duration(500)
+
 //
 
 //* CREATE UPDATE FUNCTION
@@ -67,10 +70,9 @@ const update = data => {
     .attr('x', d => xScale(d.name))
     .attr('width', xScale.bandwidth)
     .style('fill', 'orange')
-    .transition()
-    .duration(500)
-    .attr('y', d => yScale(d.orders))
-    .attr('height', d => graphHeight - yScale(d.orders))
+  // .transition(t)
+  // .attr('y', d => yScale(d.orders))
+  // .attr('height', d => graphHeight - yScale(d.orders))
   //* For the transition...the starting 'y' and 'height' values already exist because the elements already exist in the DOM. Therefore only need to provide the current or updated values after 'transition' method
 
   //? Append the 'enter' selection to the DOM with 'rect' elements
@@ -82,8 +84,8 @@ const update = data => {
     .style('fill', 'orange')
     .attr('y', graphHeight) // starting condition for transition
     .attr('height', 0) // starting condition for transition
-    .transition() //* THE TRANSITION METHOD
-    .duration(1000) //* DURATION
+    .merge(rects) // merges with the current 'rects' above since code beyond this point is shared (kind of pointless and messy here...)
+    .transition(t) // 't' is a reusable transition created above
     .attr('y', d => yScale(d.orders)) // final condition for transition
     .attr('height', d => graphHeight - yScale(d.orders)) // final condition
 
