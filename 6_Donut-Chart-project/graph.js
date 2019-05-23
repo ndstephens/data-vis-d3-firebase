@@ -20,7 +20,7 @@ const pie = d3
   .sort(null)
   .value(d => d.cost)
 
-//? Arc generator, use data after it's been processed by the 'pie' function
+//? Arc generator, use data after it's been processed by the 'pie' function. Returns an SVG path string
 const arcPath = d3
   .arc()
   .outerRadius(dims.radius)
@@ -30,7 +30,16 @@ const arcPath = d3
 
 //* ========  UPDATE FUNCTION  ============
 const update = data => {
-  console.log(data)
+  // Join enhanced (pie) data to path elements
+  const paths = graph.selectAll('path').data(pie(data))
+
+  paths
+    .enter()
+    .append('path')
+    .attr('class', 'arc')
+    .attr('d', arcPath)
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 3)
 }
 
 //? DATA ARRAY
