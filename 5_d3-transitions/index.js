@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 import db from './firebase'
+import { widthTween } from './tweens'
 
 //? CREATE THE MAIN SVG CONTAINER ELEMENT
 const svgWidth = 600
@@ -49,7 +50,7 @@ const yAxis = d3
   .tickFormat(d => `${d} orders`)
 
 //? CREATE A REUSABLE TRANSITION
-const t = d3.transition().duration(500)
+const t = d3.transition().duration(1000)
 
 //
 
@@ -80,12 +81,13 @@ const update = data => {
     .enter()
     .append('rect')
     .attr('x', d => xScale(d.name))
-    .attr('width', xScale.bandwidth)
+    // .attr('width', 0) // starting position for 'attrTween' below
     .style('fill', 'orange')
     .attr('y', graphHeight) // starting condition for transition
     .attr('height', 0) // starting condition for transition
     .merge(rects) // merges with the current 'rects' above since code beyond this point is shared (kind of pointless and messy here...)
     .transition(t) // 't' is a reusable transition created above
+    .attrTween('width', () => widthTween(xScale.bandwidth))
     .attr('y', d => yScale(d.orders)) // final condition for transition
     .attr('height', d => graphHeight - yScale(d.orders)) // final condition
 
