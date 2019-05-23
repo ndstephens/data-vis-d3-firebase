@@ -1,4 +1,5 @@
 import db from './firebase'
+import './graph'
 
 //? Cache UI elements
 const form = document.querySelector('form')
