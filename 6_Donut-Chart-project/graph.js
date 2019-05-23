@@ -26,10 +26,16 @@ const arcPath = d3
   .outerRadius(dims.radius)
   .innerRadius(dims.radius / 2)
 
+//? Create an Ordinal Scale
+const color = d3.scaleOrdinal(d3.schemeSet3)
+
 //
 
 //* ========  UPDATE FUNCTION  ============
 const update = data => {
+  // Update color scale domain
+  color.domain(data.map(item => item.name))
+
   // Join enhanced (pie) data to path elements
   const paths = graph.selectAll('path').data(pie(data))
 
@@ -40,6 +46,7 @@ const update = data => {
     .attr('d', arcPath)
     .attr('stroke', '#fff')
     .attr('stroke-width', 3)
+    .attr('fill', d => color(d.data.name))
 }
 
 //? DATA ARRAY
