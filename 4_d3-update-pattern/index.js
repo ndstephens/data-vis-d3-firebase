@@ -27,8 +27,73 @@ const graph = svg
 //? CREATE THE GRAPH AXES
 const xAxisGroup = graph
   .append('g')
-  .attr('transform', `translate(0, ${graphHeight})`)
+  .attr('transform', `translate(0, ${graphHeight})`) // move to bottom
 const yAxisGroup = graph.append('g')
+
+//? CREATE THE SCALES (w/o the domains, which depend on the data, and will be created and updated in the 'update' function)
+// BAND SCALE function for the x-direction (num of bars)
+const xScale = d3
+  .scaleBand()
+  .range([0, graphWidth])
+  .paddingInner(0.2)
+  .paddingOuter(0.2)
+
+// LINEAR SCALE function for the y-direction (height)
+const yScale = d3.scaleLinear().range([graphHeight, 0])
+
+//? Create the axes
+const xAxis = d3.axisBottom(xScale)
+const yAxis = d3
+  .axisLeft(yScale)
+  .ticks(3)
+  .tickFormat(d => `${d} orders`)
+
+//
+
+//* CREATE UPDATE FUNCTION
+const update = data => {
+  //? Create / Update scale domains
+  xScale.domain(data.map(item => item.name)) // provides quantity and a prop name
+  yScale.domain([0, d3.max(data, d => d.orders)]) // max value of all the 'order' properties
+
+  //? Join the updated 'data' to 'rects'
+  const rects = graph.selectAll('rect').data(data)
+
+  //? Remove exit selection
+  rects.exit().remove()
+
+  //? Update properties to any 'rect' elements already in DOM
+  rects
+    .attr('width', xScale.bandwidth)
+    .attr('height', d => graphHeight - yScale(d.orders))
+    .attr('x', d => xScale(d.name))
+    .attr('y', d => yScale(d.orders))
+    .style('fill', 'orange')
+
+  //? Append the 'enter' selection to the DOM with 'rect' elements
+  rects
+    .enter()
+    .append('rect')
+    .attr('width', xScale.bandwidth)
+    .attr('height', d => graphHeight - yScale(d.orders))
+    .attr('x', d => xScale(d.name))
+    .attr('y', d => yScale(d.orders))
+    .style('fill', 'orange')
+
+  //? Call the axes
+  xAxisGroup.call(xAxis)
+  yAxisGroup.call(yAxis)
+
+  //? Transform the tick text on the x-axis
+  xAxisGroup
+    .selectAll('text')
+    .attr('text-anchor', 'end')
+    .attr('transform', 'rotate(-40)')
+    .attr('fill', 'orange')
+    .attr('font-size', '1rem')
+}
+
+//
 
 //? FETCH DATA FILE, RETURN PROMISE, PROCESS DATA
 db.collection('dishes')
@@ -37,60 +102,6 @@ db.collection('dishes')
     //* Pull the data out of the complex response object
     const data = docs.map(doc => doc.data())
 
-    //* Get the max value of all 'order' properties in the data array
-    const ordersMax = d3.max(data, d => d.orders)
-
-    //* Create a LINEAR SCALE function for the y-direction (height)
-    const yScale = d3
-      .scaleLinear()
-      .domain([0, ordersMax]) // use the 'ordersMax' value
-      .range([graphHeight, 0])
-
-    //* Create a BAND SCALE function for the x-direction (num of bars)
-    const xScale = d3
-      .scaleBand()
-      .domain(data.map(item => item.name)) // provides quantity and a prop name
-      .range([0, graphWidth])
-      .paddingInner(0.2)
-      .paddingOuter(0.2)
-
-    //* Join the 'data' to 'rects'
-    const rects = graph.selectAll('rect').data(data)
-
-    //* Add properties to any 'rect' elements already in DOM
-    //? (** OPTIONAL **)
-    // rects
-    //   .attr('width', xScale.bandwidth)
-    //   .attr('height', d => graphHeight - yScale(d.orders))
-    //   .attr('x', d => xScale(d.name))
-    //   .attr('y', d => yScale(d.orders))
-    //   .style('fill', 'orange')
-
-    //* Append the 'enter' selection to the DOM with 'rect' elements
-    rects
-      .enter()
-      .append('rect')
-      .attr('width', xScale.bandwidth)
-      .attr('height', d => graphHeight - yScale(d.orders))
-      .attr('x', d => xScale(d.name))
-      .attr('y', d => yScale(d.orders))
-      .style('fill', 'orange')
-
-    //* Create and call the axes
-    const xAxis = d3.axisBottom(xScale)
-    const yAxis = d3
-      .axisLeft(yScale)
-      .ticks(3)
-      .tickFormat(d => `${d} orders`)
-
-    xAxisGroup.call(xAxis)
-    yAxisGroup.call(yAxis)
-
-    //* Transform the tick text on the x-axis
-    xAxisGroup
-      .selectAll('text')
-      .attr('text-anchor', 'end')
-      .attr('transform', 'rotate(-40)')
-      .attr('fill', 'orange')
-      .attr('font-size', '1rem')
+    //* Call the 'update' function
+    update(data)
   })
