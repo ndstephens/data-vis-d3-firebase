@@ -1,0 +1,16 @@
+{
+  "name": "5_d3-transitions",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html"
+  },
+  "keywords": [],
+  "author": "Nate Stephens <ndstephens@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "d3": "^5.9.2",
+    "firebase": "^6.0.2"
+  }
+}
