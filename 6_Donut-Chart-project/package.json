@@ -10,6 +10,7 @@
   "author": "Nate Stephens <ndstephens@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "d3": "^5.9.2"
+    "d3": "^5.9.2",
+    "firebase": "^6.0.2"
   }
 }
