@@ -62,13 +62,16 @@ const update = data => {
   //? Remove exit selection (OPTIONAL)
   rects.exit().remove()
 
-  //? Update properties to any 'rect' elements already in DOM
+  //? Update current 'rect' elements already in DOM
   rects
     .attr('x', d => xScale(d.name))
-    .attr('y', d => yScale(d.orders))
     .attr('width', xScale.bandwidth)
-    .attr('height', d => graphHeight - yScale(d.orders))
     .style('fill', 'orange')
+    .transition()
+    .duration(500)
+    .attr('y', d => yScale(d.orders))
+    .attr('height', d => graphHeight - yScale(d.orders))
+  //* For the transition...the starting 'y' and 'height' values already exist because the elements already exist in the DOM. Therefore only need to provide the current or updated values after 'transition' method
 
   //? Append the 'enter' selection to the DOM with 'rect' elements
   rects
