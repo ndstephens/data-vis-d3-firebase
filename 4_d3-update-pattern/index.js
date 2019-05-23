@@ -31,7 +31,6 @@ const xAxisGroup = graph
 const yAxisGroup = graph.append('g')
 
 //? FETCH DATA FILE, RETURN PROMISE, PROCESS DATA
-// d3.json('./menu-data.json').then(data => {
 db.collection('dishes')
   .get()
   .then(({ docs }) => {
@@ -77,7 +76,7 @@ db.collection('dishes')
       .attr('y', d => yScale(d.orders))
       .style('fill', 'orange')
 
-    //* CREATE AND CALL THE AXES
+    //* Create and call the axes
     const xAxis = d3.axisBottom(xScale)
     const yAxis = d3
       .axisLeft(yScale)
@@ -87,6 +86,7 @@ db.collection('dishes')
     xAxisGroup.call(xAxis)
     yAxisGroup.call(yAxis)
 
+    //* Transform the tick text on the x-axis
     xAxisGroup
       .selectAll('text')
       .attr('text-anchor', 'end')
