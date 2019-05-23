@@ -1,0 +1,23 @@
+{
+  "name": "3_scales-and-bar-charts",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html"
+  },
+  "keywords": [],
+  "author": "Nate Stephens <ndstephens@gmail.com>",
+  "license": "MIT",
+  "staticFiles": {
+    "staticPath": "public",
+    "watcherGlob": "**"
+  },
+  "dependencies": {
+    "d3": "^5.9.2",
+    "firebase": "^6.0.2"
+  },
+  "devDependencies": {
+    "parcel-plugin-static-files-copy": "^2.1.1"
+  }
+}
