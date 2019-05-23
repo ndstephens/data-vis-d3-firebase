@@ -64,21 +64,25 @@ const update = data => {
 
   //? Update properties to any 'rect' elements already in DOM
   rects
-    .attr('width', xScale.bandwidth)
-    .attr('height', d => graphHeight - yScale(d.orders))
     .attr('x', d => xScale(d.name))
     .attr('y', d => yScale(d.orders))
+    .attr('width', xScale.bandwidth)
+    .attr('height', d => graphHeight - yScale(d.orders))
     .style('fill', 'orange')
 
   //? Append the 'enter' selection to the DOM with 'rect' elements
   rects
     .enter()
     .append('rect')
-    .attr('width', xScale.bandwidth)
-    .attr('height', d => graphHeight - yScale(d.orders))
     .attr('x', d => xScale(d.name))
-    .attr('y', d => yScale(d.orders))
+    .attr('width', xScale.bandwidth)
     .style('fill', 'orange')
+    .attr('y', graphHeight) // starting condition for transition
+    .attr('height', 0) // starting condition for transition
+    .transition() //* THE TRANSITION METHOD
+    .duration(1000) //* DURATION
+    .attr('y', d => yScale(d.orders)) // final condition for transition
+    .attr('height', d => graphHeight - yScale(d.orders)) // final condition
 
   //? Call the axes
   xAxisGroup.call(xAxis)
