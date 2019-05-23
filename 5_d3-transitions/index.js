@@ -82,12 +82,13 @@ const update = data => {
     .append('rect')
     .attr('x', d => xScale(d.name))
     // .attr('width', 0) // starting position for 'attrTween' below
+    .attr('width', xScale.bandwidth)
     .style('fill', 'orange')
     .attr('y', graphHeight) // starting condition for transition
     .attr('height', 0) // starting condition for transition
     .merge(rects) // merges with the current 'rects' above since code beyond this point is shared (kind of pointless and messy here...)
     .transition(t) // 't' is a reusable transition created above
-    .attrTween('width', () => widthTween(xScale.bandwidth))
+    // .attrTween('width', () => widthTween(xScale.bandwidth))
     .attr('y', d => yScale(d.orders)) // final condition for transition
     .attr('height', d => graphHeight - yScale(d.orders)) // final condition
 
