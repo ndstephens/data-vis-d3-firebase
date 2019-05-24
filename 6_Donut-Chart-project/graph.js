@@ -45,15 +45,26 @@ const arcTweenExit = d => {
   }
 }
 
+//? Arc Tween Update
+function arcTweenUpdate(d) {
+  const i = d3.interpolate(this._current, d)
+  this._current = d
+  return function(t) {
+    return arcPath(i(t))
+  }
+}
+
 //
 
 //* ========  UPDATE FUNCTION  ============
-const update = data => {
+const update = (data, prevData) => {
   // Update color scale domain
   color.domain(data.map(item => item.name))
 
   // Join enhanced (pie) data to path elements
   const paths = graph.selectAll('path').data(pie(data))
+
+  console.log(pie(data))
 
   //? Remove exit selection items
   paths
@@ -65,11 +76,10 @@ const update = data => {
 
   //? Update items currently in the DOM
   paths
-    .attr('class', 'arc')
-    .attr('stroke', '#fff')
-    .attr('stroke-width', 3)
-    .attr('fill', d => color(d.data.name))
-    .attr('d', arcPath) // same as (d) => arcPath(d)
+    // .attr('d', arcPath) // same as (d) => arcPath(d)
+    .transition()
+    .duration(750)
+    .attrTween('d', arcTweenUpdate)
 
   //? Append any items in the enter selection
   paths
@@ -79,6 +89,9 @@ const update = data => {
     .attr('stroke', '#fff')
     .attr('stroke-width', 3)
     .attr('fill', d => color(d.data.name))
+    .each(function(d) {
+      this._current = d
+    })
     // .attr('d', arcPath)
     .transition()
     .duration(750)
