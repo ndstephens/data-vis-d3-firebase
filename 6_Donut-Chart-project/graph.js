@@ -37,6 +37,14 @@ const arcTweenEnter = d => {
   }
 }
 
+//? Arc Tween Exit
+const arcTweenExit = d => {
+  const i = d3.interpolate(d.startAngle, d.endAngle)
+  return t => {
+    return arcPath({ ...d, startAngle: i(t) })
+  }
+}
+
 //
 
 //* ========  UPDATE FUNCTION  ============
@@ -48,7 +56,12 @@ const update = data => {
   const paths = graph.selectAll('path').data(pie(data))
 
   //? Remove exit selection items
-  paths.exit().remove()
+  paths
+    .exit()
+    .transition()
+    .duration(750)
+    .attrTween('d', arcTweenExit)
+    .remove()
 
   //? Update items currently in the DOM
   paths
@@ -66,7 +79,7 @@ const update = data => {
     .attr('stroke', '#fff')
     .attr('stroke-width', 3)
     .attr('fill', d => color(d.data.name))
-    // .attr('d', d => arcPath({ ...d, startAngle: d.endAngle }))
+    // .attr('d', arcPath)
     .transition()
     .duration(750)
     .attrTween('d', arcTweenEnter) // (d) => arcTween(d)
