@@ -39,6 +39,18 @@ const update = data => {
   // Join enhanced (pie) data to path elements
   const paths = graph.selectAll('path').data(pie(data))
 
+  //? Remove exit selection items
+  paths.exit().remove()
+
+  //? Update items currently in the DOM
+  paths
+    .attr('class', 'arc')
+    .attr('d', arcPath) // same as (d) => arcPath(d)
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 3)
+    .attr('fill', d => color(d.data.name))
+
+  //? Append any items in the enter selection
   paths
     .enter()
     .append('path')

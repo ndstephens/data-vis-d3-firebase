@@ -63,7 +63,7 @@ const update = data => {
   //? Join the updated 'data' to 'rects'
   const rects = graph.selectAll('rect').data(data)
 
-  //? Remove exit selection (OPTIONAL)
+  //? Remove exit selection
   rects.exit().remove()
 
   //? Update current 'rect' elements already in DOM
