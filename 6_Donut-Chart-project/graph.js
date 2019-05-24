@@ -29,6 +29,14 @@ const arcPath = d3
 //? Create an Ordinal Scale
 const color = d3.scaleOrdinal(d3.schemeSet3)
 
+//? Arc Tween Enter
+const arcTweenEnter = d => {
+  const i = d3.interpolate(d.endAngle, d.startAngle)
+  return t => {
+    return arcPath({ ...d, startAngle: i(t) })
+  }
+}
+
 //
 
 //* ========  UPDATE FUNCTION  ============
@@ -45,20 +53,23 @@ const update = data => {
   //? Update items currently in the DOM
   paths
     .attr('class', 'arc')
-    .attr('d', arcPath) // same as (d) => arcPath(d)
     .attr('stroke', '#fff')
     .attr('stroke-width', 3)
     .attr('fill', d => color(d.data.name))
+    .attr('d', arcPath) // same as (d) => arcPath(d)
 
   //? Append any items in the enter selection
   paths
     .enter()
     .append('path')
     .attr('class', 'arc')
-    .attr('d', arcPath)
     .attr('stroke', '#fff')
     .attr('stroke-width', 3)
     .attr('fill', d => color(d.data.name))
+    // .attr('d', d => arcPath({ ...d, startAngle: d.endAngle }))
+    .transition()
+    .duration(750)
+    .attrTween('d', arcTweenEnter) // (d) => arcTween(d)
 }
 
 //? DATA ARRAY
