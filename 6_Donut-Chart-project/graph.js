@@ -162,6 +162,7 @@ const update = (data, prevData) => {
     .selectAll('path')
     .on('mouseover', handleMouseOver)
     .on('mouseout', handleMouseOut)
+    .on('click', handleClick)
 }
 
 //? DATA ARRAYS
@@ -207,4 +208,10 @@ const handleMouseOut = (d, i, n) => {
     .transition('fillMouseOut')
     .duration(300)
     .attr('fill', d.data.color)
+}
+const handleClick = d => {
+  const { id } = d.data
+  db.collection('expenses')
+    .doc(id)
+    .delete()
 }
