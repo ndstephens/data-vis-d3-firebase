@@ -111,7 +111,12 @@ const update = (data, prevData) => {
     .domain(names)
     .range(colors)
 
-  legendGroup.call(legend.scale(ordinal))
+  legendGroup
+    .call(legend.scale(ordinal))
+    .attr('opacity', 0)
+    .transition()
+    .duration(750)
+    .attr('opacity', 1)
   legendGroup
     .selectAll('text')
     .attr('fill', 'white')
