@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { legendColor } from 'd3-svg-legend'
 import db from './firebase'
 
 const dims = { height: 300, width: 300, radius: 150 }
@@ -13,6 +14,15 @@ const svg = d3
 const graph = svg
   .append('g')
   .attr('transform', `translate(${center.x}, ${center.y})`)
+
+//? LEGEND FOR THE PIE CHART
+const legendGroup = svg
+  .append('g')
+  .attr('transform', `translate(${dims.width + 40}, 10)`)
+
+const legend = legendColor()
+  .shape('circle')
+  .shapePadding(7)
 
 //* This 'pie' function analyzes the 'cost' property in our data and for each piece of data returns an array of objects each containing the original data object, the index, the startAngle, and the endAngle
 const pie = d3
@@ -89,13 +99,26 @@ function arcTweenExit(exitItem, currentData, prevData) {
 
 //* ========  UPDATE FUNCTION  ============
 const update = (data, prevData) => {
-  // Update color scale domain
+  // Update color scale domain (not using anymore)
   // color.domain(data.map(item => item.name))
 
-  // Join enhanced (pie) data to path elements
-  const paths = graph.selectAll('path').data(pie(data), d => d.data.id)
+  //? Create scale of names to colors, apply to legendGroup
+  const names = data.map(item => item.name)
+  const colors = data.map(item => item.color)
 
-  console.log(pie(data))
+  const ordinal = d3
+    .scaleOrdinal()
+    .domain(names)
+    .range(colors)
+
+  legendGroup.call(legend.scale(ordinal))
+  legendGroup
+    .selectAll('text')
+    .attr('fill', 'white')
+    .attr('font-weight', 'bold')
+
+  //? Join enhanced (pie) data to path elements
+  const paths = graph.selectAll('path').data(pie(data), d => d.data.id)
 
   //? Remove exit selection items
   const currentData = pie(data)
