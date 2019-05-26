@@ -14,13 +14,13 @@ const graph = svg
   .append('g')
   .attr('transform', `translate(${center.x}, ${center.y})`)
 
-//? This 'pie' function analyzes the 'cost' property in our data and for each piece of data returns an array of objects each containing the original data object, the index, the startAngle, and the endAngle
+//* This 'pie' function analyzes the 'cost' property in our data and for each piece of data returns an array of objects each containing the original data object, the index, the startAngle, and the endAngle
 const pie = d3
   .pie()
   .sort(null)
   .value(d => d.cost)
 
-//? Arc generator, use data after it's been processed by the 'pie' function. Returns an SVG path string
+//* Arc generator, use data after it's been processed by the 'pie' function. Returns an SVG path string
 const arcPath = d3
   .arc()
   .outerRadius(dims.radius)
@@ -28,6 +28,10 @@ const arcPath = d3
 
 //? Create an Ordinal Scale
 const color = d3.scaleOrdinal(d3.schemeSet3)
+
+//
+
+//* ========== TWEEN FUNCTIONS =============
 
 //? Arc Tween Enter
 const arcTweenEnter = d => {
@@ -37,20 +41,46 @@ const arcTweenEnter = d => {
   }
 }
 
-//? Arc Tween Exit
-const arcTweenExit = d => {
-  const i = d3.interpolate(d.startAngle, d.endAngle)
-  return t => {
-    return arcPath({ ...d, startAngle: i(t) })
+//? Arc Tween Update
+function arcTweenUpdate(d) {
+  // interpolate between previously saved state of this item (_currentState) and its updated state (d)
+  const i = d3.interpolate(this._currentState, d)
+  // update the current state
+  this._currentState = d
+  return function(t) {
+    return arcPath(i(t))
   }
 }
 
-//? Arc Tween Update
-function arcTweenUpdate(d) {
-  const i = d3.interpolate(this._current, d)
-  this._current = d
-  return function(t) {
-    return arcPath(i(t))
+//? Arc Tween Exit
+function arcTweenExit(exitItem, currentData, prevData) {
+  // If item was at start of donut chart
+  if (exitItem.index === 0) {
+    const i = d3.interpolate(exitItem.endAngle, exitItem.startAngle)
+    return t => {
+      return arcPath({ ...exitItem, endAngle: i(t) })
+    }
+  }
+  // If item was at end of donut chart
+  if (exitItem.index === prevData.length - 1) {
+    const i = d3.interpolate(exitItem.startAngle, exitItem.endAngle)
+    return t => {
+      return arcPath({ ...exitItem, startAngle: i(t) })
+    }
+  }
+  // If item exited between start and end of donut chart
+  const startIndex = exitItem.index - 1
+  const endIndex = exitItem.index
+  const start = d3.interpolate(
+    exitItem.startAngle,
+    currentData[startIndex].endAngle
+  )
+  const end = d3.interpolate(
+    exitItem.endAngle,
+    currentData[endIndex].startAngle
+  )
+  return t => {
+    return arcPath({ ...exitItem, startAngle: start(t), endAngle: end(t) })
   }
 }
 
@@ -62,21 +92,21 @@ const update = (data, prevData) => {
   color.domain(data.map(item => item.name))
 
   // Join enhanced (pie) data to path elements
-  const paths = graph.selectAll('path').data(pie(data))
+  const paths = graph.selectAll('path').data(pie(data), d => d.data.id)
 
-  console.log(pie(data))
+  // console.log(pie(data))
 
   //? Remove exit selection items
+  const currentData = pie(data)
   paths
     .exit()
     .transition()
     .duration(750)
-    .attrTween('d', arcTweenExit)
+    .attrTween('d', d => arcTweenExit(d, currentData, prevData))
     .remove()
 
   //? Update items currently in the DOM
   paths
-    // .attr('d', arcPath) // same as (d) => arcPath(d)
     .transition()
     .duration(750)
     .attrTween('d', arcTweenUpdate)
@@ -90,19 +120,22 @@ const update = (data, prevData) => {
     .attr('stroke-width', 3)
     .attr('fill', d => color(d.data.name))
     .each(function(d) {
-      this._current = d
+      this._currentState = d
+      // add a property to this item which holds its current state. Used in the 'arcTweenUpdate'
     })
-    // .attr('d', arcPath)
     .transition()
     .duration(750)
-    .attrTween('d', arcTweenEnter) // (d) => arcTween(d)
+    .attrTween('d', arcTweenEnter)
 }
 
-//? DATA ARRAY
+//? DATA ARRAYS
 let data = []
+let prevData = []
 
-//? Connect to Firestore DB
+//* CONNECT TO FIRESTORE DB
 db.collection('expenses').onSnapshot(res => {
+  prevData = data
+
   res.docChanges().forEach(change => {
     const doc = { ...change.doc.data(), id: change.doc.id }
 
@@ -123,5 +156,5 @@ db.collection('expenses').onSnapshot(res => {
     }
   })
 
-  update(data)
+  update(data, prevData)
 })
