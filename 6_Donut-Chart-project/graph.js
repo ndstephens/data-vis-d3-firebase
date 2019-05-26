@@ -202,6 +202,7 @@ const handleMouseOver = (d, i, n) => {
     .transition('fillMouseOver')
     .duration(300)
     .attr('fill', 'white')
+    .attr('cursor', 'pointer')
 }
 const handleMouseOut = (d, i, n) => {
   d3.select(n[i])
