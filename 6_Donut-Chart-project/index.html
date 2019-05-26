@@ -36,22 +36,36 @@
         <div class="col s12 m6">
           <form class="card z-depth-2">
             <div class="card-content">
-              <!-- Title -->
+              <!-- TITLE -->
               <span class="card-title cyan-text">Add Item:</span>
+
               <!-- Item Name -->
               <div class="input-field">
                 <input type="text" id="name" autofocus />
                 <label for="name">Item Name</label>
               </div>
+
               <!-- Item Cost -->
               <div class="input-field">
                 <input type="text" id="cost" />
                 <label for="cost">Item Cost</label>
               </div>
-              <!-- BUTTON - Add Item -->
-              <div class="input-field center">
-                <button class="btn-large pink white-text">Add Item</button>
+
+              <!-- BUTTONS -->
+              <div style="display: flex; justify-content: space-between">
+                <input type="hidden" id="color" value="80deea" />
+                <button
+                  class="jscolor {valueElement: 'color'} btn-large black-text"
+                  type="button"
+                  style="background-color: #80deea"
+                >
+                  Pick Color
+                </button>
+                <button class="btn-large pink white-text" type="submit">
+                  Add Item
+                </button>
               </div>
+
               <!-- ERRORS -->
               <div class="input-field center">
                 <p class="red-text" id="error"></p>

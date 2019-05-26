@@ -27,7 +27,8 @@ const arcPath = d3
   .innerRadius(dims.radius / 2)
 
 //? Create an Ordinal Scale
-const color = d3.scaleOrdinal(d3.schemeSet3)
+// const color = d3.scaleOrdinal(d3.schemeSet3)
+//? now setting colors directly
 
 //
 
@@ -89,12 +90,12 @@ function arcTweenExit(exitItem, currentData, prevData) {
 //* ========  UPDATE FUNCTION  ============
 const update = (data, prevData) => {
   // Update color scale domain
-  color.domain(data.map(item => item.name))
+  // color.domain(data.map(item => item.name))
 
   // Join enhanced (pie) data to path elements
   const paths = graph.selectAll('path').data(pie(data), d => d.data.id)
 
-  // console.log(pie(data))
+  console.log(pie(data))
 
   //? Remove exit selection items
   const currentData = pie(data)
@@ -118,7 +119,7 @@ const update = (data, prevData) => {
     .attr('class', 'arc')
     .attr('stroke', '#fff')
     .attr('stroke-width', 3)
-    .attr('fill', d => color(d.data.name))
+    .attr('fill', d => d.data.color)
     .each(function(d) {
       this._currentState = d
       // add a property to this item which holds its current state. Used in the 'arcTweenUpdate'
