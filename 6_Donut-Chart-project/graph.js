@@ -198,13 +198,13 @@ db.collection('expenses').onSnapshot(res => {
 //* EVENT HANDLERS
 const handleMouseOver = (d, i, n) => {
   d3.select(n[i])
-    .transition()
+    .transition('fillMouseOver')
     .duration(300)
     .attr('fill', 'white')
 }
 const handleMouseOut = (d, i, n) => {
   d3.select(n[i])
-    .transition()
+    .transition('fillMouseOut')
     .duration(300)
     .attr('fill', d.data.color)
 }
