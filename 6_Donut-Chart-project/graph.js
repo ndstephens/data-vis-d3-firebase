@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import * as d3 from 'd3'
 import { legendColor } from 'd3-svg-legend'
 import db from './firebase'
@@ -155,6 +156,12 @@ const update = (data, prevData) => {
     .transition()
     .duration(750)
     .attrTween('d', arcTweenEnter)
+
+  //? ADD MOUSE-OVER EVENT TO EACH CHART SECTION (handler code below)
+  graph
+    .selectAll('path')
+    .on('mouseover', handleMouseOver)
+    .on('mouseout', handleMouseOut)
 }
 
 //? DATA ARRAYS
@@ -187,3 +194,17 @@ db.collection('expenses').onSnapshot(res => {
 
   update(data, prevData)
 })
+
+//* EVENT HANDLERS
+const handleMouseOver = (d, i, n) => {
+  d3.select(n[i])
+    .transition()
+    .duration(300)
+    .attr('fill', 'white')
+}
+const handleMouseOut = (d, i, n) => {
+  d3.select(n[i])
+    .transition()
+    .duration(300)
+    .attr('fill', d.data.color)
+}
