@@ -1,4 +1,5 @@
 /* eslint-disable prefer-destructuring */
+import './graph'
 import db from './firebase'
 
 //? DOM ELEMENTS
@@ -37,7 +38,6 @@ form.addEventListener('submit', e => {
   e.preventDefault()
 
   const distance = parseFloat(input.value.trim(), 10)
-  console.log(distance)
 
   if (!distance) {
     error.textContent = 'Please enter a valid distance'
