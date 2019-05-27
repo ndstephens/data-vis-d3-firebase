@@ -28,9 +28,33 @@ const data = [
   { name: 'classical', parent: 'music', amount: 5 },
 ]
 
+//? CREATE ROOT SVG
+const svg = d3
+  .select('.canvas')
+  .append('svg')
+  .attr('width', 1060)
+  .attr('height', 800)
+
+//? CREATE A GRAPH GROUP
+const graph = svg.append('g').attr('transform', 'translate(50, 50)')
+
+//? STRATIFY FUNCTION
 const stratify = d3
   .stratify()
   .id(d => d.name)
   .parentId(d => d.parent)
 
-console.log(stratify(data))
+//? STRATIFY THE DATA ('sum' provides the 'value' prop)
+const rootNode = stratify(data).sum(d => d.amount)
+// console.log(rootNode)
+
+//? BUBBLE PACK GENERATOR (gives each Node an x,y center and a radius)
+const pack = d3
+  .pack()
+  .size([960, 700])
+  .padding(5)
+// console.log(pack(rootNode))
+
+//? PUT ALL THE UPDATED DATA BACK INTO AN ARRAY
+const bubbleData = pack(rootNode).descendants()
+// console.log(pack(rootNode).descendants())
