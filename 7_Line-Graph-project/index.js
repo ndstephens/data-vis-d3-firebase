@@ -1,5 +1,7 @@
+/* eslint-disable import/no-mutable-exports */
+/* eslint-disable import/prefer-default-export */
 /* eslint-disable prefer-destructuring */
-import './graph'
+import { update, data } from './graph'
 import db from './firebase'
 
 //? DOM ELEMENTS
@@ -10,7 +12,7 @@ const input = document.querySelector('input')
 const error = document.querySelector('.error')
 
 // Default activity - updated by button clicks
-let activity = 'running'
+export let activity = 'running'
 
 //? BUTTON EVENT LISTENERS
 btns.forEach(btn => {
@@ -30,6 +32,9 @@ btns.forEach(btn => {
 
     // focus input
     input.focus()
+
+    // call update function from graph.js
+    update(data)
   })
 })
 

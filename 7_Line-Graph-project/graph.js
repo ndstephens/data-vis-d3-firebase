@@ -1,6 +1,9 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable import/no-mutable-exports */
 /* eslint-disable no-case-declarations */
 import * as d3 from 'd3'
 import db from './firebase'
+import { activity } from './index'
 
 //* ======== CHART USER INTERFACE ==========
 //? CREATE UI SVG, MARGIN, and GRAPH SETTINGS
@@ -41,7 +44,10 @@ const yAxisGroup = graph.append('g').attr('class', 'y-axis')
 
 //* ======== APPLICATION LOGIC ==========
 //? UPDATE FUNCTION
-const update = data => {
+export const update = data => {
+  // Filter out only the data based on which button is selected (by activity)
+  data = data.filter(item => item.activity === activity)
+
   // Set scale domains
   xScale.domain(d3.extent(data, d => new Date(d.date)))
   yScale.domain([0, d3.max(data, d => d.distance)])
@@ -88,7 +94,7 @@ const update = data => {
 }
 
 //? Declare a data array
-let data = []
+export let data = []
 
 //? WATCH DATABASE FOR CHANGES IN REAL-TIME
 db.collection('activities').onSnapshot(res => {
