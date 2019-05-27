@@ -46,6 +46,26 @@ const update = data => {
   xScale.domain(d3.extent(data, d => new Date(d.date)))
   yScale.domain([0, d3.max(data, d => d.distance)])
 
+  // Create circles for data points
+  const circles = graph.selectAll('circle').data(data)
+
+  // Remove deleted data points
+  circles.exit().remove()
+
+  // Update already existing data points
+  circles
+    .attr('cx', d => xScale(new Date(d.date)))
+    .attr('cy', d => yScale(d.distance))
+
+  // Add new data points
+  circles
+    .enter()
+    .append('circle')
+    .attr('r', 4)
+    .attr('cx', d => xScale(new Date(d.date)))
+    .attr('cy', d => yScale(d.distance))
+    .attr('fill', '#ccc')
+
   // Create the axes
   const xAxis = d3
     .axisBottom(xScale)
