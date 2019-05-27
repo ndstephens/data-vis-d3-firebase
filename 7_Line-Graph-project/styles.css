@@ -1,0 +1,23 @@
+.nav {
+  background-color: #333333;
+}
+
+button,
+button:focus {
+  background-color: #333;
+  margin-bottom: 20px;
+  width: 100%;
+  padding: 16px;
+  font-size: 1.6em;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button.active {
+  background-color: #00bfa5;
+}
+
+form span {
+  color: #00bfa5;
+}

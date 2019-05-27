@@ -12,7 +12,46 @@
     <title>Fitness Tracker</title>
   </head>
 
-  <body>
+  <body class="grey darken-4">
+    <div class="nav z-depth-0">
+      <div class="section center">
+        <h3 class="white-text center">- Fitness Tracker -</h3>
+      </div>
+    </div>
+
+    <div class="section center">
+      <p class="grey-text flow-text">Get off your lazy bum</p>
+    </div>
+
+    <div class="container section">
+      <div class="row">
+        <div class="col s12 l5">
+          <button class="active" data-activity="running">Running</button>
+          <button data-activity="hiking">Hiking</button>
+          <button data-activity="cycling">Cycling</button>
+          <button data-activity="lifting">Lifting</button>
+        </div>
+        <div class="col s12 l6 push-l1">
+          <div class="canvas"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <form class="col m6 push-m3">
+          <p class="flow-text grey-text center">
+            How much <span>running</span> have you done today?
+          </p>
+          <input
+            type="text"
+            class="grey-text"
+            id="running"
+            placeholder="Distance or time"
+          />
+          <p class="center pink-text error text-lighten-1"></p>
+        </form>
+      </div>
+    </div>
+
     <!-- MATERIALIZE -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <!-- JAVASCRIPT -->
