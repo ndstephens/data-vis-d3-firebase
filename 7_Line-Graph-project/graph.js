@@ -27,6 +27,9 @@ const graph = svg
   .attr('height', graphDims.height)
   .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
+//? CREATE A LINE PATH ELEMENT
+const path = graph.append('path')
+
 //
 
 //* ======== SCALES AND AXES GROUPS ==========
@@ -43,14 +46,34 @@ const yAxisGroup = graph.append('g').attr('class', 'y-axis')
 //
 
 //* ======== APPLICATION LOGIC ==========
+//? LINE PATH GENERATOR
+const line = d3
+  .line()
+  .x(function(d) {
+    return xScale(new Date(d.date))
+  })
+  .y(function(d) {
+    return yScale(d.distance)
+  })
+
 //? UPDATE FUNCTION
 export const update = data => {
-  // Filter out only the data based on which button is selected (by activity)
+  // Filter out data based on currently selected activity
   data = data.filter(item => item.activity === activity)
+  // Sort data based on date field
+  data.sort((a, b) => new Date(a.date) - new Date(b.date))
 
   // Set scale domains
   xScale.domain(d3.extent(data, d => new Date(d.date)))
   yScale.domain([0, d3.max(data, d => d.distance)])
+
+  // Update line path with data to display it
+  path
+    .data([data])
+    .attr('fill', 'none')
+    .attr('stroke', '#00bfa5')
+    .attr('stroke-width', 2)
+    .attr('d', line)
 
   // Create circles for data points
   const circles = graph.selectAll('circle').data(data)
