@@ -58,3 +58,30 @@ const pack = d3
 //? PUT ALL THE UPDATED DATA BACK INTO AN ARRAY
 const bubbleData = pack(rootNode).descendants()
 // console.log(pack(rootNode).descendants())
+
+//
+
+//* JOIN DATA AND ADD GROUP FOR EACH NODE
+const nodes = graph
+  .selectAll('g')
+  .data(bubbleData)
+  .enter()
+  .append('g')
+  .attr('transform', d => `translate(${d.x}, ${d.y})`)
+
+nodes
+  .append('circle')
+  .attr('r', d => d.r)
+  .attr('stroke', 'white')
+  .attr('stroke-width', 2)
+  .attr('fill', 'purple')
+  .style('opacity', 0.3)
+
+nodes
+  .filter(node => !node.children)
+  .append('text')
+  .attr('text-anchor', 'middle')
+  .attr('dy', '0.3em')
+  .attr('fill', 'white')
+  .style('font-size', d => `${Math.max(9, d.value * 5.2)}px`)
+  .text(d => d.data.name)
