@@ -116,35 +116,43 @@ export const update = data => {
     .attr('fill', '#ccc')
 
   //* Animate circle data points to grow in size when hovered AND display dotted lines
+  // MOUSE OVER
   graph.selectAll('circle').on('mouseover', function(d) {
+    // the circle
     d3.select(this)
       .transition('circleGrow')
       .duration(250)
       .attr('r', 10)
       .attr('fill', '#fff')
 
+    // the dotted lines
+    const circleX = this.getAttribute('cx') // or xScale(new Date(d.date))
+    const circleY = this.getAttribute('cy') // or yScale(d.distance)
     dottedLineGroup
       .transition('dottedLineFadeIn')
       .duration(250)
       .style('opacity', 1)
     xDottedLine
-      .attr('x1', xScale(new Date(d.date)))
-      .attr('y1', yScale(d.distance))
+      .attr('x1', circleX)
+      .attr('y1', circleY)
       .attr('x2', 0)
-      .attr('y2', yScale(d.distance))
+      .attr('y2', circleY)
     yDottedLine
-      .attr('x1', xScale(new Date(d.date)))
-      .attr('y1', yScale(d.distance))
-      .attr('x2', xScale(new Date(d.date)))
+      .attr('x1', circleX)
+      .attr('y1', circleY)
+      .attr('x2', circleX)
       .attr('y2', graphDims.height)
   })
+  // MOUSE OUT
   graph.selectAll('circle').on('mouseout', function() {
+    // the circle
     d3.select(this)
       .transition('circleShrink')
       .duration(250)
       .attr('r', 6)
       .attr('fill', '#ccc')
 
+    // the dotted lines
     dottedLineGroup
       .transition('dottedLineFadeOut')
       .duration(250)
