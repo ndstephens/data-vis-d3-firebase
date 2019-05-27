@@ -7,8 +7,8 @@ import { activity } from './index'
 
 //* ======== CHART USER INTERFACE ==========
 //? CREATE UI SVG, MARGIN, and GRAPH SETTINGS
-const svgDims = { width: 560, height: 400 }
-const margin = { top: 40, right: 20, bottom: 50, left: 100 }
+const svgDims = { width: 560, height: 370 }
+const margin = { top: 10, right: 20, bottom: 50, left: 100 }
 const graphDims = {
   width: svgDims.width - margin.left - margin.right,
   height: svgDims.height - margin.top - margin.bottom,
@@ -90,10 +90,26 @@ export const update = data => {
   circles
     .enter()
     .append('circle')
-    .attr('r', 4)
+    .attr('r', 6)
     .attr('cx', d => xScale(new Date(d.date)))
     .attr('cy', d => yScale(d.distance))
     .attr('fill', '#ccc')
+
+  // Animate circle data points to grow in size when hovered
+  graph.selectAll('circle').on('mouseover', function() {
+    d3.select(this)
+      .transition('circleGrow')
+      .duration(250)
+      .attr('r', 10)
+      .attr('fill', '#fff')
+  })
+  graph.selectAll('circle').on('mouseout', function() {
+    d3.select(this)
+      .transition('circleShrink')
+      .duration(250)
+      .attr('r', 6)
+      .attr('fill', '#ccc')
+  })
 
   // Create the axes
   const xAxis = d3
