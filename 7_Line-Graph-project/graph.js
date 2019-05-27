@@ -30,6 +30,26 @@ const graph = svg
 //? CREATE A LINE PATH ELEMENT
 const path = graph.append('path')
 
+//? CREATE A DOTTED LINE GROUP
+const dottedLineGroup = graph
+  .append('g')
+  .attr('class', 'lines')
+  .style('opacity', 0)
+
+//? CREATE AN X DOTTED LINE AND APPEND TO GROUP
+const xDottedLine = dottedLineGroup
+  .append('line')
+  .attr('stroke', '#aaa')
+  .attr('stroke-width', 1)
+  .attr('stroke-dasharray', 4)
+
+//? CREATE A Y DOTTED LINE AND APPEND TO GROUP
+const yDottedLine = dottedLineGroup
+  .append('line')
+  .attr('stroke', '#aaa')
+  .attr('stroke-width', 1)
+  .attr('stroke-dasharray', 4)
+
 //
 
 //* ======== SCALES AND AXES GROUPS ==========
@@ -95,13 +115,28 @@ export const update = data => {
     .attr('cy', d => yScale(d.distance))
     .attr('fill', '#ccc')
 
-  // Animate circle data points to grow in size when hovered
-  graph.selectAll('circle').on('mouseover', function() {
+  //* Animate circle data points to grow in size when hovered AND display dotted lines
+  graph.selectAll('circle').on('mouseover', function(d) {
     d3.select(this)
       .transition('circleGrow')
       .duration(250)
       .attr('r', 10)
       .attr('fill', '#fff')
+
+    dottedLineGroup
+      .transition('dottedLineFadeIn')
+      .duration(250)
+      .style('opacity', 1)
+    xDottedLine
+      .attr('x1', xScale(new Date(d.date)))
+      .attr('y1', yScale(d.distance))
+      .attr('x2', 0)
+      .attr('y2', yScale(d.distance))
+    yDottedLine
+      .attr('x1', xScale(new Date(d.date)))
+      .attr('y1', yScale(d.distance))
+      .attr('x2', xScale(new Date(d.date)))
+      .attr('y2', graphDims.height)
   })
   graph.selectAll('circle').on('mouseout', function() {
     d3.select(this)
@@ -109,6 +144,11 @@ export const update = data => {
       .duration(250)
       .attr('r', 6)
       .attr('fill', '#ccc')
+
+    dottedLineGroup
+      .transition('dottedLineFadeOut')
+      .duration(250)
+      .style('opacity', 0)
   })
 
   // Create the axes
