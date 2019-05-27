@@ -47,12 +47,24 @@ const update = data => {
   yScale.domain([0, d3.max(data, d => d.distance)])
 
   // Create the axes
-  const xAxis = d3.axisBottom(xScale).ticks(4)
-  const yAxis = d3.axisLeft(yScale).ticks(4)
+  const xAxis = d3
+    .axisBottom(xScale)
+    .ticks(4)
+    .tickFormat(d3.timeFormat('%b %d'))
+  const yAxis = d3
+    .axisLeft(yScale)
+    .ticks(4)
+    .tickFormat(d => `${d} miles`)
 
   // Call axes (takes the axes and creates the needed shapes inside the groups)
   xAxisGroup.call(xAxis)
   yAxisGroup.call(yAxis)
+
+  // Rotate x-axis text
+  xAxisGroup
+    .selectAll('text')
+    .attr('text-anchor', 'end')
+    .attr('transform', 'rotate(-40)')
 }
 
 //? Declare a data array
