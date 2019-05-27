@@ -12,6 +12,7 @@
   "dependencies": {
     "d3": "^5.9.2",
     "d3-svg-legend": "^2.25.6",
+    "d3-tip": "^0.9.1",
     "firebase": "^6.0.2"
   }
 }

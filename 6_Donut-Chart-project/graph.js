@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import * as d3 from 'd3'
 import { legendColor } from 'd3-svg-legend'
+import d3tip from 'd3-tip'
 import db from './firebase'
 
 const dims = { height: 300, width: 300, radius: 150 }
@@ -25,6 +26,20 @@ const legend = legendColor()
   .shape('circle')
   .shapePadding(7)
 
+//? TOOLTIP FOR PIE CHART HOVER
+const tip = d3tip()
+  .attr('class', 'tip card')
+  .html(d => {
+    return `
+    <div class="name">${d.data.name}</div>
+    <div class="cost">$${d.data.cost}</div>
+    <div class="delete">Click slice to delete</div>
+    `
+  })
+
+graph.call(tip)
+
+//? HELPER FUNCTIONS
 //* This 'pie' function analyzes the 'cost' property in our data and for each piece of data returns an array of objects each containing the original data object, the index, the startAngle, and the endAngle
 const pie = d3
   .pie()
@@ -37,9 +52,8 @@ const arcPath = d3
   .outerRadius(dims.radius)
   .innerRadius(dims.radius / 2)
 
-//? Create an Ordinal Scale
+//? Create an Ordinal Scale for color (NO LONGER USING)
 // const color = d3.scaleOrdinal(d3.schemeSet3)
-//? now setting colors directly
 
 //
 
@@ -100,7 +114,7 @@ function arcTweenExit(exitItem, currentData, prevData) {
 
 //* ========  UPDATE FUNCTION  ============
 const update = (data, prevData) => {
-  // Update color scale domain (not using anymore)
+  // Update color scale domain (NO LONGER USING)
   // color.domain(data.map(item => item.name))
 
   //? Create scale of names to colors, apply to legendGroup
@@ -198,6 +212,7 @@ db.collection('expenses').onSnapshot(res => {
 
 //* EVENT HANDLERS
 const handleMouseOver = (d, i, n) => {
+  tip.show(d, n[i]) // 'n[i]' replaces 'this' if using a normal function
   d3.select(n[i])
     .transition('fillMouseOver')
     .duration(300)
@@ -205,6 +220,7 @@ const handleMouseOver = (d, i, n) => {
     .attr('cursor', 'pointer')
 }
 const handleMouseOut = (d, i, n) => {
+  tip.hide()
   d3.select(n[i])
     .transition('fillMouseOut')
     .duration(300)
