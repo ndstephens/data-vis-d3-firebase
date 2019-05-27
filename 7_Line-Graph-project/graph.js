@@ -26,7 +26,7 @@ const graph = svg
 
 //
 
-//* ======== SCALES AND AXES ==========
+//* ======== SCALES AND AXES GROUPS ==========
 const xScale = d3.scaleTime().range([0, graphDims.width])
 const yScale = d3.scaleLinear().range([graphDims.height, 0])
 
@@ -42,7 +42,17 @@ const yAxisGroup = graph.append('g').attr('class', 'y-axis')
 //* ======== APPLICATION LOGIC ==========
 //? UPDATE FUNCTION
 const update = data => {
-  console.log(data)
+  // Set scale domains
+  xScale.domain(d3.extent(data, d => new Date(d.date)))
+  yScale.domain([0, d3.max(data, d => d.distance)])
+
+  // Create the axes
+  const xAxis = d3.axisBottom(xScale).ticks(4)
+  const yAxis = d3.axisLeft(yScale).ticks(4)
+
+  // Call axes (takes the axes and creates the needed shapes inside the groups)
+  xAxisGroup.call(xAxis)
+  yAxisGroup.call(yAxis)
 }
 
 //? Declare a data array
