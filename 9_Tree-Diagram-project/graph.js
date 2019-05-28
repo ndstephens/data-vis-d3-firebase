@@ -33,14 +33,36 @@ const tree = d3.tree().size([graphDims.width, graphDims.height])
 
 //? UPDATE FUNCTION
 const update = data => {
+  //* Stratify the data
   const rootNode = stratify(data)
   // console.log(rootNode)
+  //* Run that through the tree generator
   const treeData = tree(rootNode)
   // console.log(treeData)
 
-  // Get nodes selection and join data ('descendants' converts data object to an array)
+  //* Get nodes selection and join data ('descendants' converts data object to an array)
   // console.log(treeData.descendants())
   const nodes = graph.selectAll('.node').data(treeData.descendants())
+
+  //* Get link selection and join data ('links' is used to create link paths)
+  const links = graph.selectAll('.link').data(treeData.links())
+  // console.log(treeData.links())
+
+  //* Create 'enter' link groups
+  links
+    .enter()
+    .append('path')
+    .attr('class', 'link')
+    .attr('fill', 'none')
+    .attr('stroke', '#aaa')
+    .attr('stroke-width', 2)
+    .attr(
+      'd',
+      d3
+        .linkVertical()
+        .x(d => d.x)
+        .y(d => d.y)
+    )
 
   //* Create 'enter' node groups
   const enterNodes = nodes
@@ -48,8 +70,7 @@ const update = data => {
     .append('g')
     .attr('class', 'node')
     .attr('transform', d => `translate(${d.x}, ${d.y})`)
-
-  // Append 'rect's to enter nodes
+  //* Append 'rect's to enter nodes
   enterNodes
     .append('rect')
     .attr('fill', '#aaa')
@@ -58,7 +79,7 @@ const update = data => {
     .attr('height', 50)
     .attr('width', d => d.data.name.length * 20)
 
-  // Append name text
+  //* Append name text
   enterNodes
     .append('text')
     .attr('text-anchor', 'middle')
