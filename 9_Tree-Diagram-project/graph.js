@@ -41,6 +41,29 @@ const update = data => {
   // Get nodes selection and join data ('descendants' converts data object to an array)
   // console.log(treeData.descendants())
   const nodes = graph.selectAll('.node').data(treeData.descendants())
+
+  //* Create 'enter' node groups
+  const enterNodes = nodes
+    .enter()
+    .append('g')
+    .attr('class', 'node')
+    .attr('transform', d => `translate(${d.x}, ${d.y})`)
+
+  // Append 'rect's to enter nodes
+  enterNodes
+    .append('rect')
+    .attr('fill', '#aaa')
+    .attr('stroke', '#555')
+    .attr('stroke-width', 2)
+    .attr('height', 50)
+    .attr('width', d => d.data.name.length * 20)
+
+  // Append name text
+  enterNodes
+    .append('text')
+    .attr('text-anchor', 'middle')
+    .attr('fill', 'white')
+    .text(d => d.data.name)
 }
 
 //? DATA OBJECT
