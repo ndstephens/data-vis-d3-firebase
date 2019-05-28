@@ -1,6 +1,6 @@
 import { Modal } from 'materialize-css'
+import './graph'
 import db from './firebase'
-// import './graph'
 
 //? CACHE UI ELEMENTS
 const modal = document.querySelector('#modal')
