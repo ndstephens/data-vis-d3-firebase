@@ -17,8 +17,44 @@
   </head>
 
   <body>
-    <!-- MATERIALIZE -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <div class="pink section">
+      <h2 class="white-text center">Fake Corp</h2>
+    </div>
+
+    <div class="grey lighten-3 section grey-text" style="position: relative">
+      <p class="flow-text center">The Number ONE Fake Company</p>
+      <a
+        href="#modal"
+        class="modal-trigger btn-floating btn-large halfway-fab pink"
+      >
+        <i class="material-icons">add</i>
+      </a>
+    </div>
+
+    <!-- POPUP / MODAL -->
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <h4 class="pink-text center">Add New Employee</h4>
+        <form>
+          <div class="input-field">
+            <input type="text" id="name" placeholder="Employee Name" />
+          </div>
+          <div class="input-field">
+            <input type="text" id="parent" placeholder="Reports to..." />
+          </div>
+          <div class="input-field">
+            <input type="text" id="department" placeholder="Department" />
+          </div>
+          <div class="input-field">
+            <button class="btn pink white-text">Add Employee</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- SVG CONTAINER -->
+    <div class="canvas"></div>
+
     <!-- INDEX.JS -->
     <script src="./index.js"></script>
   </body>
