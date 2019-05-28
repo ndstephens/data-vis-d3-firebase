@@ -2,6 +2,7 @@
 import * as d3 from 'd3'
 import db from './firebase'
 
+//* ========== UI ELEMENTS ===========
 //? UI CONSTANTS
 const graphDims = { width: 1100, height: 500 }
 const margins = { width: 100, height: 100 }
@@ -17,6 +18,30 @@ const svg = d3
 const graph = svg
   .append('g')
   .attr('transform', `translate(${margins.width / 2}, ${margins.height / 2})`)
+
+//
+
+//* =========== DATA FUNCTIONS ===========
+//? DATA STRATIFICATION
+const stratify = d3
+  .stratify()
+  .id(d => d.name)
+  .parentId(d => d.parent)
+
+//? TREE GENERATOR
+const tree = d3.tree().size([graphDims.width, graphDims.height])
+
+//? UPDATE FUNCTION
+const update = data => {
+  const rootNode = stratify(data)
+  // console.log(rootNode)
+  const treeData = tree(rootNode)
+  // console.log(treeData)
+
+  // Get nodes selection and join data ('descendants' converts data object to an array)
+  // console.log(treeData.descendants())
+  const nodes = graph.selectAll('.node').data(treeData.descendants())
+}
 
 //? DATA OBJECT
 let data = []
@@ -41,4 +66,6 @@ db.collection('employees').onSnapshot(res => {
         break
     }
   })
+
+  update(data)
 })
