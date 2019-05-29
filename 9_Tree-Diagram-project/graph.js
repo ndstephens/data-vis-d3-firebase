@@ -33,6 +33,10 @@ const tree = d3.tree().size([graphDims.width, graphDims.height])
 
 //? UPDATE FUNCTION
 const update = data => {
+  //* Remove all nodes currently in the DOM.  Forces a 'data refresh' every time and puts everything into the 'Enter' selection.  Dirty way of refreshing the UI when new data is added
+  graph.selectAll('.node').remove()
+  graph.selectAll('.link').remove()
+
   //* Stratify the data
   const rootNode = stratify(data)
   // console.log(rootNode)
@@ -48,7 +52,7 @@ const update = data => {
   const links = graph.selectAll('.link').data(treeData.links())
   // console.log(treeData.links())
 
-  //* Create 'enter' link groups
+  //* Create 'enter' LINK groups
   links
     .enter()
     .append('path')
@@ -64,7 +68,7 @@ const update = data => {
         .y(d => d.y)
     )
 
-  //* Create 'enter' node groups
+  //* Create 'enter' NODE groups
   const enterNodes = nodes
     .enter()
     .append('g')
@@ -78,6 +82,10 @@ const update = data => {
     .attr('stroke-width', 2)
     .attr('height', 50)
     .attr('width', d => d.data.name.length * 20)
+    .attr(
+      'transform',
+      d => `translate(${-((d.data.name.length * 20) / 2)}, ${-30})`
+    )
 
   //* Append name text
   enterNodes
