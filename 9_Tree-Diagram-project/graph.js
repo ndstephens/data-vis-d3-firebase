@@ -19,6 +19,9 @@ const graph = svg
   .append('g')
   .attr('transform', `translate(${margins.width / 2}, ${margins.height / 2})`)
 
+//? CREATE ORDINAL SCALE FOR DEPARTMENT COLORS
+const deptColor = d3.scaleOrdinal(['#f4511e', '#e91e63', '#a5d935', '#9c27b0'])
+
 //
 
 //* =========== DATA FUNCTIONS ===========
@@ -36,6 +39,9 @@ const update = data => {
   //* Remove all nodes currently in the DOM.  Forces a 'data refresh' every time and puts everything into the 'Enter' selection.  Dirty way of refreshing the UI when new data is added
   graph.selectAll('.node').remove()
   graph.selectAll('.link').remove()
+
+  //* Update ordinal scale domain
+  deptColor.domain(data.map(item => item.department))
 
   //* Stratify the data
   const rootNode = stratify(data)
@@ -77,7 +83,7 @@ const update = data => {
   //* Append 'rect's to enter nodes
   enterNodes
     .append('rect')
-    .attr('fill', '#aaa')
+    .attr('fill', d => deptColor(d.data.department)) //* apply ordinal scale
     .attr('stroke', '#555')
     .attr('stroke-width', 2)
     .attr('height', 50)
