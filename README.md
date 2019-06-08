@@ -53,3 +53,4 @@ to supply real time data.
 - Ordinal color scale
 
 ![tree-diagram](./images/tree-diagram.png)
+
