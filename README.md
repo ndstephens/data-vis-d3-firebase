@@ -7,7 +7,7 @@ to supply real time data.
 
 ### Budget Tracker -- Donut Chart
 
-- #### View a [working demo](https://donut-chart-nds.netlify.com/)
+- View a [working demo](https://donut-chart-nds.netlify.com/)
 - Arc path generator
 - Enter and exit selection transitions / tweens
 - Ordinal scales
